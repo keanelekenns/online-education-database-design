@@ -1,4 +1,4 @@
-\echo Drop all tables if they exist '\n'
+-- \echo Drop all tables if they exist '\n'
 
 DROP TABLE IF EXISTS marks;
 DROP TABLE IF EXISTS submissions;
@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS teachers;
 DROP TABLE IF EXISTS templates;
 DROP TABLE IF EXISTS students;
 
-\echo '\n'Perform initial creation of tables'\n'
+-- \echo '\n'Perform initial creation of tables'\n'
 
 CREATE TABLE Teachers(
 username VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -45,7 +45,7 @@ mark real CHECK (mark <= 100 AND mark >= 0),
 markedpdf bytea);
 
 
-\echo '\n'Insert and update data in tables'\n'
+-- \echo '\n'Insert and update data in tables'\n'
 
 INSERT INTO Teachers (username, skypeid, email, language)
 VALUES ('BBird', 'bird75', 'bbird@uvic.ca', 'english'),
@@ -77,11 +77,11 @@ VALUES (123, 1,'KEnns', '2016-06-22 19:10:25-07'),
 (235,4,'BBoy', '2019-06-22 19:10:25-07');
 
 
-\echo '\n'Whenever we add a mark, we need to update the students average.
-\echo We will have external logic to get the students current average and calculate what the new one should be.'\n'
-\echo First, add the marked assignment to our database
-\echo Next, get the current average and number of assignments completed of the student matching the submission
-\echo Then, update the average and number of assignments'\n'
+-- \echo '\n'Whenever we add a mark, we need to update the students average.
+-- \echo We will have external logic to get the students current average and calculate what the new one should be.'\n'
+-- \echo First, add the marked assignment to our database
+-- \echo Next, get the current average and number of assignments completed of the student matching the submission
+-- \echo Then, update the average and number of assignments'\n'
 
 INSERT INTO Marks(submissionId, markedby, mark)
 VALUES (123,'BBird', 85.6);
@@ -105,7 +105,7 @@ UPDATE Students SET average = 49.5, numassignmentscompleted = 1 WHERE username='
 SELECT username, average, numassignmentscompleted FROM students WHERE username='BBoy';
 
 
-\echo '\n'Add another submission with a mark and update average/numAssignmentsCompleted'\n'
+-- \echo '\n'Add another submission with a mark and update average/numAssignmentsCompleted'\n'
 
 INSERT INTO Submissions(submissionid,templateid,submittedby,timesubmitted)
 VALUES (231,3,'KEnns', '2019-11-22 23:17:29-09');
@@ -114,7 +114,7 @@ VALUES (231,'RLittle', 89.6);
 UPDATE Students SET average = 87.6, numassignmentscompleted = 2 WHERE username='KEnns';
 SELECT username, average, numassignmentscompleted FROM students WHERE username='KEnns';
 
-\echo '\n'Add submission and assign teacher, but no mark is inserted yet'\n'
+-- \echo '\n'Add submission and assign teacher, but no mark is inserted yet'\n'
 
 INSERT INTO Submissions(submissionid,templateid,submittedby,timesubmitted)
 VALUES (1,4,'JSmith', '2019-06-28 19:10:25-07');
@@ -123,19 +123,19 @@ INSERT INTO Marks(submissionid, markedby)
 VALUES (1,'BBird');
 SELECT submissionId, markedBy, mark FROM marks WHERE submissionID=1;
 
-\echo '\n'Remove an unused template'\n'
+-- \echo '\n'Remove an unused template'\n'
 
-\echo '\n'TEMPLATES BEFORE:'\n'
+-- \echo '\n'TEMPLATES BEFORE:'\n'
 
 SELECT * FROM templates;
 
 DELETE FROM templates WHERE templateid=5;
 
-\echo '\n'TEMPLATES AFTER:'\n'
+-- \echo '\n'TEMPLATES AFTER:'\n'
 
 SELECT * FROM templates;
 
-\echo '\n'Get information from all tables'\n'
+-- \echo '\n'Get information from all tables'\n'
 
 SELECT * FROM students;
 SELECT * FROM teachers;
@@ -143,22 +143,22 @@ SELECT * FROM templates;
 SELECT * FROM submissions;
 SELECT * FROM marks;
 
-\echo '\n'Run sample queries'\n'
+-- \echo '\n'Run sample queries'\n'
 
-\echo '\n'Figure out best performing students above a given level X that have completed > Y assignments'\n'
+-- \echo '\n'Figure out best performing students above a given level X that have completed > Y assignments'\n'
 
 SELECT username, average
 FROM Students
 WHERE level>0 AND numAssignmentsCompleted > 0
 ORDER BY average DESC;
 
-\echo '\n'When a teacher X logs in, get all unmarked submissions assigned to them'\n'
+-- \echo '\n'When a teacher X logs in, get all unmarked submissions assigned to them'\n'
 
 SELECT submissionId, submittedpdf
 FROM Marks NATURAL JOIN submissions
 WHERE markedBy='BBird' AND mark is null;
 
-\echo '\n'When a student logs in, get all worksheets of their level X and language Y available to them'\n'
+-- \echo '\n'When a student logs in, get all worksheets of their level X and language Y available to them'\n'
 
 SELECT templateId, templatepdf
 FROM Templates
